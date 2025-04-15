@@ -8,6 +8,7 @@ public class ArrayQueue<T> implements QueueInterface<T> {
 	private boolean initialized = false;
 	private static final int DEFAULT_CAPACITY = 50;
 	private static final int MAX_CAPACITY = 10000;
+	private int hello;
 	
 	
 	public ArrayQueue() {
