@@ -89,11 +89,91 @@ public class BinarySearchTree<T extends Comparable<? super T>> extends BinaryTre
 	
 	
 	public T remove(T entry) {
-		
+		 ReturnObject<T> oldEntry = new ReturnObject<>(null);
+		 BinaryNode<T> newRoot = removeEntry(getRootNode(), entry, oldEntry);
+		 return oldEntry.get();
 	}
 	
-	public Iterator<T> getInorderIterator() {
+	private BinaryNode<T> removeEntry(BinaryNode<T> rootNode, T entry, ReturnObject oldEntry){
+		if (rootNode != null) {
+			T rootData = rootNode.getData();
+			int comparison = entry.compareTo(rootData);
+			
+			if (comparison == 0) {
+				oldEntry.set(rootData);
+				rootNode = removeFromRoot(rootNode);
+			}
+			
+			else if (comparison < 0) {
+				BinaryNode<T> leftChild = rootNode.getLeftChild();
+				BinaryNode<T> subtreeRoot = removeEntry(leftChild, entry, oldEntry);
+				rootNode.setLeftChild(subtreeRoot);
+			}
+			
+			else {
+				BinaryNode<T> rightChild = rootNode.getRightChild();
+				rootNode.setRightChild(removeEntry(rightChild, entry, oldEntry));
+			}
+		}
+		return rootNode;
+	}
+	
+	private BinaryNode<T> removeFromRoot(BinaryNode<T> rootNode){
+		if (rootNode.hasLeftChild() && rootNode.hasRightChild()) {
+			BinaryNode<T> leftSubtreeRoot = rootNode.getLeftChild();
+			BinaryNode<T> largestNode = findLargest(leftSubtreeRoot);
+			
+			rootNode.setData(largestNode.getData());
+			rootNode.setLeftChild(removeLargest(leftSubtreeRoot));
+		}
+		
+		else if (rootNode.hasRightChild()) {
+			rootNode = rootNode.getRightChild();
+		}
+		else {
+			rootNode = rootNode.getLeftChild();
+		}
+		return rootNode;
+	}
+	
+	private BinaryNode<T> findLargest(BinaryNode<T> rootNode){
+		if (rootNode.hasRightChild()) {
+			rootNode = findLargest(rootNode.getRightChild());
+		} return rootNode;
+	}
+	
+	private BinaryNode<T> removeLargest(BinaryNode<T> rootNode){
+		if (rootNode.hasRightChild()) {
+			BinaryNode<T> rightChild = rootNode.getRightChild();
+			rightChild = removeLargest(rightChild);
+			rootNode.setRightChild(rightChild);
+		}
+		else {
+			rootNode = rootNode.getLeftChild();
+		}
+		return rootNode;
+	}
+	
+
+
+	
+	private class ReturnObject<T> {
+	    private T data;
+
+	    public ReturnObject(T data) {
+	        this.data = data;
+	    }
+
+	    public T get() {
+	        return data;
+	    }
+
+	    public void set(T data) {
+	        this.data = data;
+	    }
+	}
+	
+     public Iterator<T> getInorderIterator() {
 		
 	}
-
 }
