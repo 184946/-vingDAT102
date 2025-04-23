@@ -8,6 +8,7 @@ public class AVLTree<T extends Comparable<? super T>> extends BinarySearchTree<T
 	}
 	
 	public AVLTree(T rootEntry) {
+		
 		super(rootEntry);
 	}
 
